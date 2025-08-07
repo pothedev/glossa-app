@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.IO;
 
 
-namespace Glossa.src
+namespace Glossa.src.utility
 {
     class GoogleVoiceChecker
     {

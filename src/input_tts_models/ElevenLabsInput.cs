@@ -1,0 +1,113 @@
+﻿using NAudio.CoreAudioApi;
+using NAudio.Wave;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.Json.Nodes;
+using System.Text.Json;
+using Glossa.src.utility;
+
+namespace Glossa.src.input_tts_models
+{
+    public static class InputTTS_ElevenLabs
+    {
+        private static readonly ConcurrentQueue<string> _speechQueue = new();
+        private static readonly SemaphoreSlim _playbackLock = new(1, 1);
+        private static bool _isPlaying;
+
+        //private static Settings _settings;
+
+        public static Task Speak(string text)
+        {
+            _speechQueue.Enqueue(text);
+            _ = ProcessQueueAsync(); // Fire-and-forget queue processing
+            return Task.CompletedTask;
+        }
+
+        private static async Task ProcessQueueAsync()
+        {
+            if (_isPlaying) return;
+
+            await _playbackLock.WaitAsync();
+            try
+            {
+                _isPlaying = true;
+                while (_speechQueue.TryDequeue(out var text))
+                {
+                    await PlayTextAsync(text);
+                }
+            }
+            finally
+            {
+                _isPlaying = false;
+                _playbackLock.Release();
+            }
+        }
+
+        private static async Task PlayTextAsync(string text)
+        {
+            string model = "UgBBYS2sOqTuMpoF3BR0"; // default male voice (Mark)
+
+            if (SettingsHelper.GetValue<string>("UserVoiceGender") == "Female")
+            {
+                model = "aMSt68OGf4xUZAnLpTU8";
+            }
+
+            // 1. Look for the render endpoint
+            var enumerator = new MMDeviceEnumerator();
+            var outputDevice = enumerator.EnumerateAudioEndPoints(
+                                        DataFlow.Render, DeviceState.Active)
+                                    .FirstOrDefault(d => d.FriendlyName.Contains("Voicemeeter VAIO3"));
+            if (outputDevice == null)
+            {
+                var list = string.Join(", ",
+                    enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+                                .Select(d => d.FriendlyName));
+                throw new Exception("Voicemeeter VAIO3 render device not found. Available devices: " + list);
+            }
+
+            // 2. Check API key
+            var apiKey = Environment.GetEnvironmentVariable("ELEVENLABS_API_KEY");
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                throw new Exception("Missing ElevenLabs API key.");
+            }
+
+            // 3. Build JSON payload
+            var payload = JsonSerializer.Serialize(new
+            {
+                text,
+                model_id = "eleven_multilingual_v2",
+                voice_settings = new
+                {
+                    stability = 0.5f,
+                    similarity_boost = 0.75f,
+                }
+            });
+
+            // 4. Send request
+            using var http = new HttpClient();
+            http.DefaultRequestHeaders.Add("xi-api-key", apiKey);
+            string url = $"https://api.elevenlabs.io/v1/text-to-speech/{model}/stream";
+
+            var resp = await http.PostAsync(
+                url,
+                new StringContent(payload, Encoding.UTF8, "application/json"));
+            resp.EnsureSuccessStatusCode();
+
+            // 5. Play audio with proper completion waiting
+            using var waveOut = new WasapiOut(outputDevice, AudioClientShareMode.Shared, false, 200);
+            var tcs = new TaskCompletionSource<bool>();
+
+            waveOut.PlaybackStopped += (s, e) => tcs.TrySetResult(true);
+            waveOut.Init(new Mp3FileReader(await resp.Content.ReadAsStreamAsync()));
+            waveOut.Play();
+
+            await tcs.Task; // Wait for playback to complete
+        }
+    }
+}

@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Glossa.src;
+using Glossa.src.utility;
 
 namespace Glossa
 {
@@ -285,8 +285,6 @@ namespace Glossa
         private void UpdateVoiceGenderAvailability(string languageCode, bool isUser) {
             bool maleAvailable = GoogleVoiceChecker.Google(languageCode)[0];
             bool femaleAvailable = GoogleVoiceChecker.Google(languageCode)[1];
-
-            System.Diagnostics.Debug.WriteLine("hi");
 
             if (isUser)
             {
