@@ -1,0 +1,194 @@
+[
+    {
+        "language": "Arabic",
+        "country": "Saudi Arabia",
+        "flag": "https://flagcdn.com/36x27/sa.png",
+        "code": "ar-SA"
+    },
+    {
+        "language": "Chinese (Simplified)",
+        "country": "China",
+        "flag": "https://flagcdn.com/36x27/cn.png",
+        "code": "zh-CN"
+    },
+    {
+        "language": "Chinese (Traditional)",
+        "country": "Taiwan",
+        "flag": "https://flagcdn.com/36x27/tw.png",
+        "code": "zh-TW"
+    },
+    {
+        "language": "Czech",
+        "country": "Czech Republic",
+        "flag": "https://flagcdn.com/36x27/cz.png",
+        "code": "cs-CZ"
+    },
+    {
+        "language": "Danish",
+        "country": "Denmark",
+        "flag": "https://flagcdn.com/36x27/dk.png",
+        "code": "da-DK"
+    },
+    {
+        "language": "Dutch",
+        "country": "Netherlands",
+        "flag": "https://flagcdn.com/36x27/nl.png",
+        "code": "nl-NL"
+    },
+    {
+        "language": "English",
+        "country": "United Kingdom",
+        "flag": "https://flagcdn.com/36x27/gb.png",
+        "code": "en-GB"
+    },
+    {
+        "language": "Finnish",
+        "country": "Finland",
+        "flag": "https://flagcdn.com/36x27/fi.png",
+        "code": "fi-FI"
+    },
+    {
+        "language": "French",
+        "country": "France",
+        "flag": "https://flagcdn.com/36x27/fr.png",
+        "code": "fr-FR"
+    },
+    {
+        "language": "German",
+        "country": "Germany",
+        "flag": "https://flagcdn.com/36x27/de.png",
+        "code": "de-DE"
+    },
+    {
+        "language": "Greek",
+        "country": "Greece",
+        "flag": "https://flagcdn.com/36x27/gr.png",
+        "code": "el-GR"
+    },
+    {
+        "language": "Hebrew",
+        "country": "Israel",
+        "flag": "https://flagcdn.com/36x27/il.png",
+        "code": "he-IL"
+    },
+    {
+        "language": "Hindi",
+        "country": "India",
+        "flag": "https://flagcdn.com/36x27/in.png",
+        "code": "hi-IN"
+    },
+    {
+        "language": "Hungarian",
+        "country": "Hungary",
+        "flag": "https://flagcdn.com/36x27/hu.png",
+        "code": "hu-HU"
+    },
+    {
+        "language": "Indonesian",
+        "country": "Indonesia",
+        "flag": "https://flagcdn.com/36x27/id.png",
+        "code": "id-ID"
+    },
+    {
+        "language": "Italian",
+        "country": "Italy",
+        "flag": "https://flagcdn.com/36x27/it.png",
+        "code": "it-IT"
+    },
+    {
+        "language": "Japanese",
+        "country": "Japan",
+        "flag": "https://flagcdn.com/36x27/jp.png",
+        "code": "ja-JP"
+    },
+    {
+        "language": "Korean",
+        "country": "South Korea",
+        "flag": "https://flagcdn.com/36x27/kr.png",
+        "code": "ko-KR"
+    },
+    {
+        "language": "Norwegian",
+        "country": "Norway",
+        "flag": "https://flagcdn.com/36x27/no.png",
+        "code": "nb-NO"
+    },
+    {
+        "language": "Persian",
+        "country": "Iran",
+        "flag": "https://flagcdn.com/36x27/ir.png",
+        "code": "fa-IR"
+    },
+    {
+        "language": "Polish",
+        "country": "Poland",
+        "flag": "https://flagcdn.com/36x27/pl.png",
+        "code": "pl-PL"
+    },
+    {
+        "language": "Portuguese",
+        "country": "Portugal",
+        "flag": "https://flagcdn.com/36x27/pt.png",
+        "code": "pt-PT"
+    },
+    {
+        "language": "Romanian",
+        "country": "Romania",
+        "flag": "https://flagcdn.com/36x27/ro.png",
+        "code": "ro-RO"
+    },
+    {
+        "language": "Russian",
+        "country": "Russia",
+        "flag": "https://flagcdn.com/36x27/ru.png",
+        "code": "ru-RU"
+    },
+    {
+        "language": "Slovak",
+        "country": "Slovakia",
+        "flag": "https://flagcdn.com/36x27/sk.png",
+        "code": "sk-SK"
+    },
+    {
+        "language": "Spanish",
+        "country": "Spain",
+        "flag": "https://flagcdn.com/36x27/es.png",
+        "code": "es-ES"
+    },
+    {
+        "language": "Swedish",
+        "country": "Sweden",
+        "flag": "https://flagcdn.com/36x27/se.png",
+        "code": "sv-SE"
+    },
+    {
+        "language": "Thai",
+        "country": "Thailand",
+        "flag": "https://flagcdn.com/36x27/th.png",
+        "code": "th-TH"
+    },
+    {
+        "language": "Turkish",
+        "country": "Turkey",
+        "flag": "https://flagcdn.com/36x27/tr.png",
+        "code": "tr-TR"
+    },
+    {
+        "language": "Ukrainian",
+        "country": "Ukraine",
+        "flag": "https://flagcdn.com/36x27/ua.png",
+        "code": "uk-UA"
+    },
+    {
+        "language": "Urdu",
+        "country": "Pakistan",
+        "flag": "https://flagcdn.com/36x27/pk.png",
+        "code": "ur-PK"
+    },
+    {
+        "language": "Vietnamese",
+        "country": "Vietnam",
+        "flag": "https://flagcdn.com/36x27/vn.png",
+        "code": "vi-VN"
+    }
+]

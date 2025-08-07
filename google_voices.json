@@ -1,0 +1,684 @@
+{
+  "af-ZA": {
+    "language": "Afrikaans",
+    "region": "South Africa",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "af-ZA-Standard-A"
+    }
+  },
+  "ar-SA": {
+    "language": "Arabic",
+    "region": "Saudi Arabia",
+    "male": {
+      "available": true,
+      "model": "ar-XA-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "ar-XA-Wavenet-A"
+    }
+  },
+  "eu-ES": {
+    "language": "Basque",
+    "region": "Spain",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "eu-ES-Standard-B"
+    }
+  },
+  "bn-IN": {
+    "language": "Bengali",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "bn-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "bn-IN-Wavenet-A"
+    }
+  },
+  "bg-BG": {
+    "language": "Bulgarian",
+    "region": "Bulgaria",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "bg-BG-Standard-B"
+    }
+  },
+  "ca-ES": {
+    "language": "Catalan",
+    "region": "Spain",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "ca-ES-Standard-B"
+    }
+  },
+  "yue-HK": {
+    "language": "Chinese",
+    "region": "Hong Kong",
+    "male": {
+      "available": true,
+      "model": "yue-HK-Standard-B"
+    },
+    "female": {
+      "available": true,
+      "model": "yue-HK-Standard-A"
+    }
+  },
+  "cs-CZ": {
+    "language": "Czech",
+    "region": "Czech Republic",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "cs-CZ-Wavenet-B"
+    }
+  },
+  "da-DK": {
+    "language": "Danish",
+    "region": "Denmark",
+    "male": {
+      "available": true,
+      "model": "da-DK-Wavenet-G"
+    },
+    "female": {
+      "available": true,
+      "model": "da-DK-Wavenet-F"
+    }
+  },
+  "nl-BE": {
+    "language": "Dutch",
+    "region": "Belgium",
+    "male": {
+      "available": true,
+      "model": "nl-BE-Wavenet-D"
+    },
+    "female": {
+      "available": true,
+      "model": "nl-BE-Wavenet-C"
+    }
+  },
+  "nl-NL": {
+    "language": "Dutch",
+    "region": "Netherlands",
+    "male": {
+      "available": true,
+      "model": "nl-NL-Wavenet-G"
+    },
+    "female": {
+      "available": true,
+      "model": "nl-NL-Wavenet-F"
+    }
+  },
+  "en-AU": {
+    "language": "English",
+    "region": "Australia",
+    "male": {
+      "available": true,
+      "model": "en-AU-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "en-AU-Wavenet-A"
+    }
+  },
+  "en-IN": {
+    "language": "English",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "en-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "en-IN-Wavenet-A"
+    }
+  },
+  "en-GB": {
+    "language": "English",
+    "region": "UK",
+    "male": {
+      "available": true,
+      "model": "en-GB-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "en-GB-Wavenet-A"
+    }
+  },
+  "en-US": {
+    "language": "English",
+    "region": "US",
+    "male": {
+      "available": true,
+      "model": "en-US-Wavenet-A"
+    },
+    "female": {
+      "available": true,
+      "model": "en-US-Wavenet-C"
+    }
+  },
+  "fil-PH": {
+    "language": "Filipino",
+    "region": "Philippines",
+    "male": {
+      "available": true,
+      "model": "fil-PH-Wavenet-C"
+    },
+    "female": {
+      "available": true,
+      "model": "fil-PH-Wavenet-A"
+    }
+  },
+  "fi-FI": {
+    "language": "Finnish",
+    "region": "Finland",
+    "male": {
+      "available": true,
+      "model": "fi-FI-Chirp3-HD-Achird"
+    },
+    "female": {
+      "available": true,
+      "model": "fi-FI-Wavenet-B"
+    }
+  },
+  "fr-CA": {
+    "language": "French",
+    "region": "Canada",
+    "male": {
+      "available": true,
+      "model": "fr-CA-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "fr-CA-Wavenet-A"
+    }
+  },
+  "fr-FR": {
+    "language": "French",
+    "region": "France",
+    "male": {
+      "available": true,
+      "model": "fr-FR-Wavenet-G"
+    },
+    "female": {
+      "available": true,
+      "model": "fr-FR-Wavenet-F"
+    }
+  },
+  "gl-ES": {
+    "language": "Galician",
+    "region": "Spain",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "gl-ES-Standard-B"
+    }
+  },
+  "de-DE": {
+    "language": "German",
+    "region": "Germany",
+    "male": {
+      "available": true,
+      "model": "de-DE-Wavenet-H"
+    },
+    "female": {
+      "available": true,
+      "model": "de-DE-Wavenet-G"
+    }
+  },
+  "el-GR": {
+    "language": "Greek",
+    "region": "Greece",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "el-GR-Wavenet-B"
+    }
+  },
+  "gu-IN": {
+    "language": "Gujarati",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "gu-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "gu-IN-Wavenet-A"
+    }
+  },
+  "he-IL": {
+    "language": "Hebrew",
+    "region": "Israel",
+    "male": {
+      "available": true,
+      "model": "he-IL-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "he-IL-Wavenet-A"
+    }
+  },
+  "hi-IN": {
+    "language": "Hindi",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "hi-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "hi-IN-Wavenet-A"
+    }
+  },
+  "hu-HU": {
+    "language": "Hungarian",
+    "region": "Hungary",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "hu-HU-Wavenet-B"
+    }
+  },
+  "is-IS": {
+    "language": "Icelandic",
+    "region": "Iceland",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "is-IS-Standard-B"
+    }
+  },
+  "id-ID": {
+    "language": "Indonesian",
+    "region": "Indonesia",
+    "male": {
+      "available": true,
+      "model": "id-ID-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "id-ID-Wavenet-A"
+    }
+  },
+  "it-IT": {
+    "language": "Italian",
+    "region": "Italy",
+    "male": {
+      "available": true,
+      "model": "it-IT-Wavenet-F"
+    },
+    "female": {
+      "available": true,
+      "model": "it-IT-Wavenet-E"
+    }
+  },
+  "ja-JP": {
+    "language": "Japanese",
+    "region": "Japan",
+    "male": {
+      "available": true,
+      "model": "ja-JP-Wavenet-C"
+    },
+    "female": {
+      "available": true,
+      "model": "ja-JP-Wavenet-A"
+    }
+  },
+  "kn-IN": {
+    "language": "Kannada",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "kn-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "kn-IN-Wavenet-A"
+    }
+  },
+  "ko-KR": {
+    "language": "Korean",
+    "region": "South Korea",
+    "male": {
+      "available": true,
+      "model": "ko-KR-Wavenet-C"
+    },
+    "female": {
+      "available": true,
+      "model": "ko-KR-Wavenet-A"
+    }
+  },
+  "lv-LV": {
+    "language": "Latvian",
+    "region": "Latvia",
+    "male": {
+      "available": true,
+      "model": "lv-LV-Standard-B"
+    },
+    "female": {
+      "available": false
+    }
+  },
+  "lt-LT": {
+    "language": "Lithuanian",
+    "region": "Lithuania",
+    "male": {
+      "available": true,
+      "model": "lt-LT-Standard-B"
+    },
+    "female": {
+      "available": false
+    }
+  },
+  "ms-MY": {
+    "language": "Malay",
+    "region": "Malaysia",
+    "male": {
+      "available": true,
+      "model": "ms-MY-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "ms-MY-Wavenet-A"
+    }
+  },
+  "ml-IN": {
+    "language": "Malayalam",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "ml-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "ml-IN-Wavenet-A"
+    }
+  },
+  "cmn-CN": {
+    "language": "Mandarin Chinese",
+    "region": "",
+    "male": {
+      "available": true,
+      "model": "cmn-CN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "cmn-CN-Wavenet-A"
+    }
+  },
+  "cmn-TW": {
+    "language": "Mandarin Chinese",
+    "region": "",
+    "male": {
+      "available": true,
+      "model": "cmn-TW-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "cmn-TW-Wavenet-A"
+    }
+  },
+  "mr-IN": {
+    "language": "Marathi",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "mr-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "mr-IN-Wavenet-A"
+    }
+  },
+  "nb-NO": {
+    "language": "Norwegian",
+    "region": "Norway",
+    "male": {
+      "available": true,
+      "model": "nb-NO-Wavenet-G"
+    },
+    "female": {
+      "available": true,
+      "model": "nb-NO-Wavenet-F"
+    }
+  },
+  "pl-PL": {
+    "language": "Polish",
+    "region": "Poland",
+    "male": {
+      "available": true,
+      "model": "pl-PL-Wavenet-G"
+    },
+    "female": {
+      "available": true,
+      "model": "pl-PL-Wavenet-F"
+    }
+  },
+  "pt-BR": {
+    "language": "Portuguese",
+    "region": "Brazil",
+    "male": {
+      "available": true,
+      "model": "pt-BR-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "pt-BR-Wavenet-A"
+    }
+  },
+  "pt-PT": {
+    "language": "Portuguese",
+    "region": "Portugal",
+    "male": {
+      "available": true,
+      "model": "pt-PT-Wavenet-F"
+    },
+    "female": {
+      "available": true,
+      "model": "pt-PT-Wavenet-E"
+    }
+  },
+  "pa-IN": {
+    "language": "Punjabi",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "pa-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "pa-IN-Wavenet-A"
+    }
+  },
+  "ro-RO": {
+    "language": "Romanian",
+    "region": "Romania",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "ro-RO-Wavenet-B"
+    }
+  },
+  "ru-RU": {
+    "language": "Russian",
+    "region": "Russia",
+    "male": {
+      "available": true,
+      "model": "ru-RU-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "ru-RU-Wavenet-A"
+    }
+  },
+  "sr-RS": {
+    "language": "Serbian",
+    "region": "Cyrillic",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "sr-RS-Standard-B"
+    }
+  },
+  "sk-SK": {
+    "language": "Slovak",
+    "region": "Slovakia",
+    "male": {
+      "available": false
+    },
+    "female": {
+      "available": true,
+      "model": "sk-SK-Wavenet-B"
+    }
+  },
+  "es-ES": {
+    "language": "Spanish",
+    "region": "Spain",
+    "male": {
+      "available": true,
+      "model": "es-ES-Wavenet-E"
+    },
+    "female": {
+      "available": true,
+      "model": "es-ES-Wavenet-F"
+    }
+  },
+  "es-US": {
+    "language": "Spanish",
+    "region": "US",
+    "male": {
+      "available": true,
+      "model": "es-US-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "es-US-Wavenet-A"
+    }
+  },
+  "sv-SE": {
+    "language": "Swedish",
+    "region": "Sweden",
+    "male": {
+      "available": true,
+      "model": "sv-SE-Wavenet-C"
+    },
+    "female": {
+      "available": true,
+      "model": "sv-SE-Wavenet-A"
+    }
+  },
+  "ta-IN": {
+    "language": "Tamil",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "ta-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "ta-IN-Wavenet-A"
+    }
+  },
+  "te-IN": {
+    "language": "Telugu",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "te-IN-Chirp3-HD-Achird"
+    },
+    "female": {
+      "available": true,
+      "model": "te-IN-Chirp3-HD-Achernar"
+    }
+  },
+  "th-TH": {
+    "language": "Thai",
+    "region": "Thailand",
+    "male": {
+      "available": true,
+      "model": "th-TH-Chirp3-HD-Achird"
+    },
+    "female": {
+      "available": true,
+      "model": "th-TH-Chirp3-HD-Achernar"
+    }
+  },
+  "tr-TR": {
+    "language": "Turkish",
+    "region": "Turkey",
+    "male": {
+      "available": true,
+      "model": "tr-TR-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "tr-TR-Wavenet-A"
+    }
+  },
+  "uk-UA": {
+    "language": "Ukrainian",
+    "region": "Ukraine",
+    "male": {
+      "available": true,
+      "model": "uk-UA-Chirp3-HD-Achird"
+    },
+    "female": {
+      "available": true,
+      "model": "uk-UA-Wavenet-B"
+    }
+  },
+  "ur-IN": {
+    "language": "Urdu",
+    "region": "India",
+    "male": {
+      "available": true,
+      "model": "ur-IN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "ur-IN-Wavenet-A"
+    }
+  },
+  "vi-VN": {
+    "language": "Vietnamese",
+    "region": "Vietnam",
+    "male": {
+      "available": true,
+      "model": "vi-VN-Wavenet-B"
+    },
+    "female": {
+      "available": true,
+      "model": "vi-VN-Wavenet-A"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "UserLanguage": "uk-UA",
+    "TargetLanguage": "pl-PL",
+    "InputTTSModel": "Google",
+    "OutputTTSModel": "Google",
+    "UserVoiceGender": "Female",
+    "TargetVoiceGender": "Male",
+    "UserMode": "Default",
+    "TargetMode":  "Summary",
+    "PushToTalkKey": "0xA4",
+    "InputTranslateEnabled": true,
+    "OutputTranslateEnabled": true,
+    "SubtitlesEnabled": true
+}
