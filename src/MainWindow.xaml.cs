@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Glossa.src;
 
 namespace Glossa
 {
@@ -116,7 +117,7 @@ namespace Glossa
         {
             try
             {
-                string jsonPath = "../../../languages.json";
+                string jsonPath = "../../../data/languages.json";
                 if (!File.Exists(jsonPath)) return;
 
                 string json = await File.ReadAllTextAsync(jsonPath);

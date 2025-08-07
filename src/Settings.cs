@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 
-namespace Glossa
+namespace Glossa.src
 {
     public class Settings
     {

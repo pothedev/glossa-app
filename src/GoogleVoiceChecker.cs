@@ -8,14 +8,14 @@ using System.Text.Json;
 using System.IO;
 
 
-namespace Glossa
+namespace Glossa.src
 {
     class GoogleVoiceChecker
     {
 
         public static bool[] Google(string languageCode)
         {
-            string path = "../../../google_voices.json";
+            string path = "../../../data/google_voices.json";
             //System.Diagnostics.Debug.WriteLine($"🔍 Checking Google voices for: {languageCode}");
 
             if (!File.Exists(path))
