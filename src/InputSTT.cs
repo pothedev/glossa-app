@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Glossa.src.utility;
 using Glossa.src.input_tts_models;
+using System.Reflection;
+using System.IO;
+using Google.Apis.Auth.OAuth2;
 
 namespace Glossa.src
 {
@@ -65,10 +68,18 @@ namespace Glossa.src
         //private readonly Settings _settings;
         public InputProcessor()
         {
-            //_settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            using var stream = Assembly.GetExecutingAssembly()
+            .GetManifestResourceStream("Glossa.google-key.json");
+
+            if (stream == null)
+                throw new InvalidOperationException("google-key.json not found in resources");
+
+            var credential = GoogleCredential.FromStream(stream);
+
+            // the builder accepts GoogleCredential directly
             _speechClient = new SpeechClientBuilder
             {
-                CredentialsPath = "../../../google-key.json"
+                Credential = credential
             }.Build();
         }
 
@@ -228,19 +239,27 @@ namespace Glossa.src
                 string translated = await Translator.Translate(transcript, languageFrom, languageTo);
                 System.Diagnostics.Debug.WriteLine($"🌍 Translated: {translated}");
 
+                string finalText = translated;
+
+                if (SettingsHelper.GetValue<bool>("InputTranslateEnabled") && finalText != "")
+                {
+                    finalText = await Summary.Summarize(translated);
+                    //System.Diagnostics.Debug.WriteLine($"✅ Summarized: {finalText}");
+                }
+
                 switch (SettingsHelper.GetValue<string>("InputTTSModel"))
                 {
                     case "Google Cloud":
-                        await InputTTS_Google.Speak(translated);
+                        await InputTTS_Google.Speak(finalText);
                         break;
                     case "ElevenLabs":
-                        await InputTTS_ElevenLabs.Speak(translated);
+                        await InputTTS_ElevenLabs.Speak(finalText);
                         break;
                     case "Windows Default":
-                        await InputTTS_Native.Speak(translated);
+                        await InputTTS_Native.Speak(finalText);
                         break;
                     default:
-                        await InputTTS_Native.Speak(translated);
+                        await InputTTS_Native.Speak(finalText);
                         break;
                 }
             }

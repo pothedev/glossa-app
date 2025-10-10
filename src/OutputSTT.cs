@@ -18,6 +18,9 @@ using Google.Protobuf;
 using System.Collections.Generic;
 using System.Text.Json;
 using Glossa.src.output_tts_models;
+using System.Reflection;
+using Google.Apis.Auth.OAuth2;
+using System.Diagnostics;
 
 namespace Glossa.src
 {
@@ -34,20 +37,26 @@ namespace Glossa.src
         private readonly WaveFormat _targetFormat = new WaveFormat(TargetSampleRate, 16, 1);
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
-        //private readonly Settings _settings;
-
+        private const int NormalMaxRecordingDurationSeconds = 15;
+        private const int SummaryMaxRecordingDurationSeconds = 15;
 
         public OutputProcessor()
         {
-            //_settings = settings ?? throw new ArgumentNullException(nameof(settings));
-
             var enumerator = new MMDeviceEnumerator();
             _vaioDevice = GetAudioDevice("Voicemeeter Input") ??
                           throw new Exception("Voicemeeter device not found");
 
+            using var stream = Assembly.GetExecutingAssembly()
+            .GetManifestResourceStream("Glossa.google-key.json");
+
+            if (stream == null)
+                throw new InvalidOperationException("google-key.json not found in resources");
+
+            var credential = GoogleCredential.FromStream(stream);
+
             _speechClient = new SpeechClientBuilder
             {
-                CredentialsPath = "../../../google-key.json"
+                Credential = credential
             }.Build();
         }
 
@@ -78,31 +87,65 @@ namespace Glossa.src
             using var capture = new WasapiLoopbackCapture(_vaioDevice);
             using var buffer = new MemoryStream();
             var stopSignal = new TaskCompletionSource<bool>();
+
+            bool summaryEnabled = SettingsHelper.GetValue<bool>("OutputTranslateEnabled");
+            int maxRecordingDuration = summaryEnabled ? SummaryMaxRecordingDurationSeconds : NormalMaxRecordingDurationSeconds;
+
+            System.Diagnostics.Debug.WriteLine(summaryEnabled
+                ? $"📝 Summary ENABLED - Recording for fixed {maxRecordingDuration} seconds"
+                : $"🔇 Summary DISABLED - Recording with silence detection (max {maxRecordingDuration}s)");
+
+            // Variables for silence detection (only used when summary is disabled)
             int silentChunks = 0;
             int maxSilentChunks = SilenceLimitMs / 100;
             bool hasSpeech = false;
+
+            Stopwatch recordingTimer = new Stopwatch();
 
             capture.DataAvailable += (s, e) =>
             {
                 if (e.BytesRecorded == 0) return;
 
                 buffer.Write(e.Buffer, 0, e.BytesRecorded);
-                float rms = CalculateRmsFloat(e.Buffer, e.BytesRecorded);
-                bool isSilent = rms < SilenceThreshold;
 
-                if (isSilent)
+                if (summaryEnabled)
                 {
-                    silentChunks++;
-                    if (hasSpeech && silentChunks >= maxSilentChunks)
+                    // SUMMARY MODE: Fixed duration recording - ignore interruptions
+                    if (recordingTimer.Elapsed.TotalSeconds >= maxRecordingDuration)
                     {
-                        System.Diagnostics.Debug.WriteLine("🛑 Detected extended silence. Processing audio...");
+                        System.Diagnostics.Debug.WriteLine($"⏱️ Fixed {maxRecordingDuration}s recording complete. Processing audio...");
                         capture.StopRecording();
                     }
                 }
                 else
                 {
-                    hasSpeech = true;
-                    silentChunks = 0;
+                    // NORMAL MODE: Stop on silence or max duration
+                    float rms = CalculateRmsFloat(e.Buffer, e.BytesRecorded);
+                    bool isSilent = rms < SilenceThreshold;
+
+                    // Stop if max duration is reached
+                    if (recordingTimer.Elapsed.TotalSeconds >= maxRecordingDuration)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"⏱️ Reached {maxRecordingDuration}s limit. Processing audio...");
+                        capture.StopRecording();
+                        return;
+                    }
+
+                    // Exit on silence detection
+                    if (isSilent)
+                    {
+                        silentChunks++;
+                        if (hasSpeech && silentChunks >= maxSilentChunks)
+                        {
+                            System.Diagnostics.Debug.WriteLine("🛑 Detected extended silence. Processing audio...");
+                            capture.StopRecording();
+                        }
+                    }
+                    else
+                    {
+                        hasSpeech = true;
+                        silentChunks = 0;
+                    }
                 }
             };
 
@@ -110,9 +153,16 @@ namespace Glossa.src
             {
                 try
                 {
-                    if (buffer.Length == 0 || !hasSpeech)
+                    if (buffer.Length == 0)
                     {
-                        System.Diagnostics.Debug.WriteLine("🔇 No speech detected - skipping processing");
+                        System.Diagnostics.Debug.WriteLine("🔇 No audio detected - skipping processing");
+                        return;
+                    }
+
+                    // For summary mode, we process regardless of speech detection
+                    if (!summaryEnabled && !hasSpeech)
+                    {
+                        System.Diagnostics.Debug.WriteLine("🔇 No speech detected in normal mode - skipping processing");
                         return;
                     }
 
@@ -132,8 +182,10 @@ namespace Glossa.src
             };
 
             System.Diagnostics.Debug.WriteLine("👂 Listening for audio...");
+            recordingTimer.Start();
             capture.StartRecording();
             await stopSignal.Task;
+            recordingTimer.Stop();
         }
 
         private MMDevice GetAudioDevice(string nameContains)
@@ -153,7 +205,6 @@ namespace Glossa.src
 
             return device;
         }
-
 
         private async Task ProcessAudioWithStreaming(byte[] audioBytes)
         {
@@ -233,11 +284,19 @@ namespace Glossa.src
                         );
                         System.Diagnostics.Debug.WriteLine($"🌍 Translation: {translated}");
 
+                        string finalText = translated;
+
+                        if (SettingsHelper.GetValue<bool>("OutputTranslateEnabled") && finalText != "")
+                        {
+                            finalText = await Summary.Summarize(translated);
+                            //System.Diagnostics.Debug.WriteLine($"✅ Summarized: {finalText}");
+                        }
+
                         switch (SettingsHelper.GetValue<string>("OutputTTSModel"))
                         {
-                            case "Google Cloud": _ = OutputTTS_Google.Speak(translated); break;
-                            case "ElevenLabs": _ = OutputTTS_ElevenLabs.Speak(translated); break;
-                            default: _ = OutputTTS_Native.Speak(translated); break;
+                            case "Google Cloud": _ = OutputTTS_Google.Speak(finalText); break;
+                            case "ElevenLabs": _ = OutputTTS_ElevenLabs.Speak(finalText); break;
+                            default: _ = OutputTTS_Native.Speak(finalText); break;
                         }
                     }
                     else if (SettingsHelper.GetValue<bool>("SubtitlesEnabled"))
@@ -301,6 +360,7 @@ namespace Glossa.src
                 System.Diagnostics.Debug.WriteLine($"⚠️ Debug audio save failed: {ex.Message}");
             }
         }
+
         private byte[] ConvertFloatTo16BitPcm(byte[] floatBuffer)
         {
             int sampleCount = floatBuffer.Length / 4;

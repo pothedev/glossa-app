@@ -6,15 +6,15 @@
         "code": "ar-SA"
     },
     {
-        "language": "Chinese (Simplified)",
-        "country": "China",
-        "flag": "https://flagcdn.com/36x27/cn.png",
-        "code": "zh-CN"
+        "language": "Bulgarian",
+        "country": "Bulgaria",
+        "flag": "https://flagcdn.com/36x27/bg.png",
+        "code": "bg-BG"
     },
     {
         "language": "Chinese (Traditional)",
-        "country": "Taiwan",
-        "flag": "https://flagcdn.com/36x27/tw.png",
+        "country": "China",
+        "flag": "https://flagcdn.com/36x27/cn.png",
         "code": "zh-TW"
     },
     {
@@ -60,24 +60,6 @@
         "code": "de-DE"
     },
     {
-        "language": "Greek",
-        "country": "Greece",
-        "flag": "https://flagcdn.com/36x27/gr.png",
-        "code": "el-GR"
-    },
-    {
-        "language": "Hebrew",
-        "country": "Israel",
-        "flag": "https://flagcdn.com/36x27/il.png",
-        "code": "he-IL"
-    },
-    {
-        "language": "Hindi",
-        "country": "India",
-        "flag": "https://flagcdn.com/36x27/in.png",
-        "code": "hi-IN"
-    },
-    {
         "language": "Hungarian",
         "country": "Hungary",
         "flag": "https://flagcdn.com/36x27/hu.png",
@@ -114,12 +96,6 @@
         "code": "nb-NO"
     },
     {
-        "language": "Persian",
-        "country": "Iran",
-        "flag": "https://flagcdn.com/36x27/ir.png",
-        "code": "fa-IR"
-    },
-    {
         "language": "Polish",
         "country": "Poland",
         "flag": "https://flagcdn.com/36x27/pl.png",
@@ -142,12 +118,6 @@
         "country": "Russia",
         "flag": "https://flagcdn.com/36x27/ru.png",
         "code": "ru-RU"
-    },
-    {
-        "language": "Slovak",
-        "country": "Slovakia",
-        "flag": "https://flagcdn.com/36x27/sk.png",
-        "code": "sk-SK"
     },
     {
         "language": "Spanish",
@@ -178,12 +148,6 @@
         "country": "Ukraine",
         "flag": "https://flagcdn.com/36x27/ua.png",
         "code": "uk-UA"
-    },
-    {
-        "language": "Urdu",
-        "country": "Pakistan",
-        "flag": "https://flagcdn.com/36x27/pk.png",
-        "code": "ur-PK"
     },
     {
         "language": "Vietnamese",

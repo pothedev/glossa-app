@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,9 +53,16 @@ namespace Glossa
                 }
             }
 
-            // Initialize voice gender radio buttons
+            // Inits
+            // Voice genders
             SetRadioButtonFromSetting(UserVoiceGenderPanel, _settings.UserVoiceGender);
             SetRadioButtonFromSetting(TargetVoiceGenderPanel, _settings.TargetVoiceGender);
+
+            // Translate toggles
+            InitializeTranslateToggles();
+
+            // Mode
+            InitializeModeSettings();
         }
 
         private void InputTTSComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -87,9 +95,18 @@ namespace Glossa
             InitializeComponent();
             _settings = Settings.Load();
 
-            // Add these lines:
+            // Voice gender
             UserVoiceGenderPanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(InputVoiceGender_Checked));
             TargetVoiceGenderPanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(OutputVoiceGender_Checked));
+
+            // Translate toggles
+            YourTogglePanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(InputTranslate_Checked));
+            TargetTogglePanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(OutputTranslate_Checked));
+
+            // Mode radio panels
+            UserModePanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(UserMode_Checked));
+            TargetModePanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(TargetMode_Checked));
+
 
             Loaded += async (s, e) => await LoadLanguagesAsync();
             InitializeTTSSettings();
@@ -117,7 +134,16 @@ namespace Glossa
         {
             try
             {
-                string jsonPath = "../../../data/languages.json";
+
+                string jsonPath = Path.Combine(Path.GetTempPath(), "languages.json");
+                using (var resourceStream = Assembly.GetExecutingAssembly()
+                           .GetManifestResourceStream("Glossa.data.languages.json")) // Namespace + file name
+                using (var fileStream = File.Create(jsonPath))
+                {
+                    resourceStream.CopyTo(fileStream);
+                }
+
+
                 if (!File.Exists(jsonPath)) return;
 
                 string json = await File.ReadAllTextAsync(jsonPath);
@@ -342,6 +368,61 @@ namespace Glossa
                 }
             }
         }
+
+
+        //Mode
+        private void UserMode_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
+            {
+                _settings.UserMode = radioButton.Content.ToString();
+                _settings.Save();
+            }
+        }
+
+        private void TargetMode_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
+            {
+                _settings.TargetMode = radioButton.Content.ToString();
+                _settings.Save();
+            }
+        }
+
+        private void InitializeModeSettings()
+        {
+            SetRadioButtonFromSetting(UserModePanel, _settings.UserMode);
+            SetRadioButtonFromSetting(TargetModePanel, _settings.TargetMode);
+        }
+
+
+
+
+        //Translate toggles
+        private void InputTranslate_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
+            {
+                _settings.InputTranslateEnabled = radioButton.Content.ToString() == "Enabled";
+                _settings.Save();
+            }
+        }
+
+        private void OutputTranslate_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
+            {
+                _settings.OutputTranslateEnabled = radioButton.Content.ToString() == "Enabled";
+                _settings.Save();
+            }
+        }
+        private void InitializeTranslateToggles()
+        {
+            SetRadioButtonFromSetting(YourTogglePanel, _settings.InputTranslateEnabled ? "Enabled" : "Disabled");
+            SetRadioButtonFromSetting(TargetTogglePanel, _settings.OutputTranslateEnabled ? "Enabled" : "Disabled");
+        }
+
+
 
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

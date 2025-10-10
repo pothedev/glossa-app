@@ -8,8 +8,10 @@
 		<UseWPF>true</UseWPF>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
+		<ApplicationIcon>assets\Glossa_logo4.ico</ApplicationIcon>
 		<!-- Optional -->
 	</PropertyGroup>
+	
 
 	<ItemGroup>
 		<!-- Only App.xaml must be declared with ApplicationDefinition -->
@@ -19,6 +21,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="assets\Glossa_logo4.ico" />
+	  <None Remove="data\google_voices.json" />
+	  <None Remove="data\languages.json" />
 	  <None Remove="styles\ScrollbarStyle.xaml" />
 	</ItemGroup>
 
@@ -27,6 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Betalgo.OpenAI" Version="8.7.2" />
+		<PackageReference Include="OpenAI" Version="2.5.0" />
 		<PackageReference Include="System.Speech" Version="8.0.0" />
 	</ItemGroup>
 
@@ -36,5 +43,24 @@
 	  <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.12.0" />
 	  <PackageReference Include="NAudio" Version="2.2.1" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="assets\Glossa_logo4.ico">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+		
+	  <EmbeddedResource Include="data\google_voices.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+		
+	  <EmbeddedResource Include="data\languages.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="google-key.json" />
+	</ItemGroup>
+
 
 </Project>

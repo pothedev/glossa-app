@@ -11,44 +11,54 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 
 using Glossa.src.utility;
+using System.Reflection;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Speech.V1;
 
 namespace Glossa.src.input_tts_models
 {
     public static class InputTTS_Google
     {
-        private const string CredentialsPath = "../../../google-key.json";
+        
+
+        //private const string CredentialsPath = "../../../google-key.json";
         //private static Settings _settings;
 
 
         public static async Task Speak(string text)
         {
 
-            // 1. Find audio output device
+            using var stream = Assembly.GetExecutingAssembly()
+            .GetManifestResourceStream("Glossa.google-key.json");
+
+            if (stream == null)
+                throw new InvalidOperationException("google-key.json not found in resources");
+
+            var credential = GoogleCredential.FromStream(stream);
+
+            var client = new TextToSpeechClientBuilder
+            {
+                Credential = credential
+            }.Build();
+
+
+
             using var enumerator = new MMDeviceEnumerator();
             var outputDevice = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
                                     .FirstOrDefault(d => d.FriendlyName.Contains("Voicemeeter VAIO3"))
                                 ?? throw new Exception("Voicemeeter VAIO3 render device not found.");
 
-            // 2. Initialize Google TTS client
-            if (!File.Exists(CredentialsPath))
+
+            
+            string jsonPath = Path.Combine(Path.GetTempPath(), "google_voices.json");
+            using (var resourceStream = Assembly.GetExecutingAssembly()
+                       .GetManifestResourceStream("Glossa.data.google_voices.json")) // Namespace + file name
+            using (var fileStream = File.Create(jsonPath))
             {
-                throw new FileNotFoundException(
-                    $"Google credentials not found at: {Path.GetFullPath(CredentialsPath)}\n" +
-                    "Please ensure:\n" +
-                    "1. google-key.json exists in the project's root folder\n" +
-                    "2. The file is copied to output directory (set 'Copy to Output Directory' = 'Copy if newer')"
-                );
+                resourceStream.CopyTo(fileStream);
             }
 
-            var client = new TextToSpeechClientBuilder
-            {
-                CredentialsPath = CredentialsPath
-            }.Build();
-
-
-            // 3. Configure voice parameters
-
-            string jsonPath = "../../../data/google_voices.json";
+            //string jsonPath = "../../../data/google_voices.json";
             if (!File.Exists(jsonPath)) return;
 
             string json = await File.ReadAllTextAsync(jsonPath);
@@ -58,20 +68,25 @@ namespace Glossa.src.input_tts_models
 
             if (languages.TryGetValue(SettingsHelper.GetValue<string>("TargetLanguage"), out var langItem))
             {
-                string model = SettingsHelper.GetValue<string>("TargetVoiceGender") == "male"
-                    ? langItem.male.model
-                    : langItem.female.model;
-
-                selectedModel = model;
+                System.Diagnostics.Debug.WriteLine("hi");
+                if (SettingsHelper.GetValue<string>("UserVoiceGender") == "Male")
+                {
+                    selectedModel = langItem.male.model;
+                    System.Diagnostics.Debug.WriteLine($"male: {langItem.male.model}");
+                }
+                else
+                {
+                    selectedModel = langItem.female.model;
+                    System.Diagnostics.Debug.WriteLine($"female: {langItem.female.model}");
+                }
             }
 
-
+            System.Diagnostics.Debug.WriteLine($"selected: { selectedModel}");
             string LanguageCode = SettingsHelper.GetValue<string>("TargetLanguage");
             var voice = new VoiceSelectionParams
             {
                 LanguageCode = LanguageCode,
                 Name = selectedModel,
-                SsmlGender = SsmlVoiceGender.Male
             };
 
             var audioConfig = new AudioConfig

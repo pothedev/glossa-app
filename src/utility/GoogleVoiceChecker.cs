@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.IO;
+using System.Reflection;
 
 
 namespace Glossa.src.utility
@@ -15,7 +16,14 @@ namespace Glossa.src.utility
 
         public static bool[] Google(string languageCode)
         {
-            string path = "../../../data/google_voices.json";
+            //string path = "../../../data/google_voices.json";
+            string path = Path.Combine(Path.GetTempPath(), "google_voices.json");
+            using (var resourceStream = Assembly.GetExecutingAssembly()
+                       .GetManifestResourceStream("Glossa.data.google_voices.json")) // Namespace + file name
+            using (var fileStream = File.Create(path))
+            {
+                resourceStream.CopyTo(fileStream);
+            }
             //System.Diagnostics.Debug.WriteLine($"🔍 Checking Google voices for: {languageCode}");
 
             if (!File.Exists(path))
