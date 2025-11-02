@@ -21,6 +21,11 @@ using Glossa.src.output_tts_models;
 using System.Reflection;
 using Google.Apis.Auth.OAuth2;
 using System.Diagnostics;
+using System.Windows;          // gives access to Application, Window, etc.
+using System.Windows.Threading; // for Dispatcher
+using System.Windows.Controls;
+using System.Windows.Media;
+
 
 namespace Glossa.src
 {
@@ -37,8 +42,8 @@ namespace Glossa.src
         private readonly WaveFormat _targetFormat = new WaveFormat(TargetSampleRate, 16, 1);
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
-        private const int NormalMaxRecordingDurationSeconds = 15;
-        private const int SummaryMaxRecordingDurationSeconds = 15;
+        private const int NormalMaxRecordingDurationSeconds = 10;
+        private const int SummaryMaxRecordingDurationSeconds = 10;
 
         public OutputProcessor()
         {
@@ -87,8 +92,13 @@ namespace Glossa.src
             using var capture = new WasapiLoopbackCapture(_vaioDevice);
             using var buffer = new MemoryStream();
             var stopSignal = new TaskCompletionSource<bool>();
+            bool summaryEnabled = false;
 
-            bool summaryEnabled = SettingsHelper.GetValue<bool>("OutputTranslateEnabled");
+
+            if (SettingsHelper.GetValue<string>("TargetMode") == "Summary")
+            {
+                summaryEnabled = true;
+            }
             int maxRecordingDuration = summaryEnabled ? SummaryMaxRecordingDurationSeconds : NormalMaxRecordingDurationSeconds;
 
             System.Diagnostics.Debug.WriteLine(summaryEnabled
@@ -286,10 +296,19 @@ namespace Glossa.src
 
                         string finalText = translated;
 
-                        if (SettingsHelper.GetValue<bool>("OutputTranslateEnabled") && finalText != "")
+                        if (SettingsHelper.GetValue<string>("TargetMode") == "Summary" && finalText != "")
                         {
                             finalText = await Summary.Summarize(translated);
-                            //System.Diagnostics.Debug.WriteLine($"✅ Summarized: {finalText}");
+                        }
+
+                        Application.Current.Dispatcher.BeginInvoke(() =>
+                        {
+                            MainWindow.SafeAddMessage?.Invoke("Other", fullTranscript, translated);
+                        });
+
+                        if (SettingsHelper.GetValue<bool>("SubtitlesEnabled"))
+                        {
+                            SubtitleRenderer.ShowText(finalText);
                         }
 
                         switch (SettingsHelper.GetValue<string>("OutputTTSModel"))
@@ -306,7 +325,13 @@ namespace Glossa.src
                             SettingsHelper.GetValue<string>("TargetLanguage").Substring(0, 2),
                             SettingsHelper.GetValue<string>("UserLanguage").Substring(0, 2)
                         );
+                        if (SettingsHelper.GetValue<bool>("OutputTranslateEnabled") && translated != "")
+                        {
+                            translated = await Summary.Summarize(translated);
+                            //System.Diagnostics.Debug.WriteLine($"✅ Summarized: {finalText}");
+                        }
                         System.Diagnostics.Debug.WriteLine($"🌍 Translation: {translated}");
+                        SubtitleRenderer.ShowText(translated);
                     }
                 }
             }

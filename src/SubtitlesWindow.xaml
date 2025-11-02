@@ -1,0 +1,45 @@
+﻿<Window x:Class="Glossa.SubtitlesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SubtitlesWindow"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#a5141414"
+        Topmost="True"
+        ResizeMode="CanResizeWithGrip"
+        Width="460"
+        Height="140"
+        SizeChanged="Window_SizeChanged">
+
+    <Grid>
+        <Border x:Name="RootBorder"
+                CornerRadius="10"
+                Padding="10"
+                Background="Transparent">
+            <TextBlock x:Name="SubtitleText"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       FontSize="22"
+                       Foreground="White"
+                       Opacity="1"
+                       IsHitTestVisible="False"/>
+        </Border>
+
+        <!-- Lock button (top-right corner) -->
+        <Button x:Name="LockButton"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Margin="0,5,5,0"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand"
+                Click="LockButton_Click">
+            <Image x:Name="LockIcon"
+                   Width="15"
+                   Height="13"
+                   Source="pack://application:,,,/assets/unlocked.png"
+                   Stretch="Uniform"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+        </Button>
+    </Grid>
+</Window>

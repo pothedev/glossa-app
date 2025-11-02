@@ -13,6 +13,11 @@ using Glossa.src.input_tts_models;
 using System.Reflection;
 using System.IO;
 using Google.Apis.Auth.OAuth2;
+using System.Windows;          // gives access to Application, Window, etc.
+using System.Windows.Threading; // for Dispatcher
+using System.Windows.Controls;
+using System.Windows.Media;
+
 
 namespace Glossa.src
 {
@@ -241,7 +246,13 @@ namespace Glossa.src
 
                 string finalText = translated;
 
-                if (SettingsHelper.GetValue<bool>("InputTranslateEnabled") && finalText != "")
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    MainWindow.SafeAddMessage?.Invoke("You", transcript, translated);
+                });
+
+
+                if (SettingsHelper.GetValue<string>("UserMode") == "Summary" && finalText != "")
                 {
                     finalText = await Summary.Summarize(translated);
                     //System.Diagnostics.Debug.WriteLine($"✅ Summarized: {finalText}");
@@ -267,6 +278,72 @@ namespace Glossa.src
             {
                 System.Diagnostics.Debug.WriteLine($"❌ Processing error: {ex.Message}");
             }
+        }
+
+        public static void AddMessage(string sender, string original, string translated)
+        {
+            // Get MainWindow instance
+            var main = (MainWindow)Application.Current.MainWindow;
+
+            // Ensure we’re on the UI thread
+            main.Dispatcher.Invoke(() =>
+            {
+                // Container for one message (horizontal layout)
+                var messageStack = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Margin = new Thickness(0, 0, 0, 7)
+                };
+
+                // Sender label
+                var senderLabel = new TextBlock
+                {
+                    Text = sender + ":",
+                    FontSize = 12,
+                    FontWeight = FontWeights.SemiBold,
+                    Margin = new Thickness(0, 0, 0, 2),
+                    Foreground = (sender == "You")
+                        ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#71D5FF"))
+                        : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE371"))
+                };
+
+                messageStack.Children.Add(senderLabel);
+
+                // Content stack (original + translated)
+                var contentStack = new StackPanel
+                {
+                    Orientation = Orientation.Vertical,
+                    Margin = (sender == "You") ? new Thickness(20, 0, 0, 0) : new Thickness(9, 0, 0, 0),
+                    MaxWidth = 186
+                };
+
+                // Original text (white)
+                contentStack.Children.Add(new TextBlock
+                {
+                    Text = original,
+                    Foreground = Brushes.White,
+                    FontSize = 12,
+                    TextWrapping = TextWrapping.Wrap,
+                    Margin = new Thickness(0, 0, 0, 2)
+                });
+
+                // Translated text (grey)
+                contentStack.Children.Add(new TextBlock
+                {
+                    Text = translated,
+                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#595959")),
+                    FontSize = 11,
+                    TextWrapping = TextWrapping.Wrap
+                });
+
+                messageStack.Children.Add(contentStack);
+
+                // Add to main transcript container
+                main.TranscriptMessages.Children.Add(messageStack);
+
+                // Scroll to bottom
+                main.TranscriptScroll.ScrollToEnd();
+            });
         }
     }
 }

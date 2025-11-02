@@ -6,9 +6,11 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Glossa.src.utility;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Glossa
 {
@@ -16,6 +18,8 @@ namespace Glossa
     {
         private Settings _settings;
         private readonly HttpClient _httpClient = new HttpClient();
+        private SubtitlesWindow? subtitlesWindow;
+        public static Action<string, string, string> SafeAddMessage;
 
         private void SetRadioButtonFromSetting(Panel panel, string value)
         {
@@ -63,6 +67,15 @@ namespace Glossa
 
             // Mode
             InitializeModeSettings();
+
+            // Panel
+            RefreshInfoPanel();
+
+            //TranscriptPanel.LayoutUpdated += (_, _) =>
+            //{
+            //    TranscriptScroll.ScrollToEnd();
+            //};
+
         }
 
         private void InputTTSComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -72,6 +85,7 @@ namespace Glossa
                 string selected = selectedItem.Content.ToString();
                 _settings.InputTTSModel = selected;
                 _settings.Save();
+                RefreshInfoPanel();
 
                 UpdateVoiceGenderAvailability(_settings.TargetLanguage, false);
             }
@@ -84,6 +98,7 @@ namespace Glossa
                 string selected = selectedItem.Content.ToString();
                 _settings.OutputTTSModel = selected;
                 _settings.Save();
+                RefreshInfoPanel();
 
                 UpdateVoiceGenderAvailability(_settings.UserLanguage, true);
             }
@@ -94,6 +109,11 @@ namespace Glossa
         {
             InitializeComponent();
             _settings = Settings.Load();
+
+            SafeAddMessage = (sender, original, translated) =>
+            {
+                AddMessageInternal(sender, original, translated);
+            };
 
             // Voice gender
             UserVoiceGenderPanel.AddHandler(RadioButton.CheckedEvent, new RoutedEventHandler(InputVoiceGender_Checked));
@@ -118,6 +138,7 @@ namespace Glossa
             {
                 _settings.UserVoiceGender = radioButton.Content.ToString();
                 _settings.Save();
+                RefreshInfoPanel();
             }
         }
 
@@ -127,6 +148,7 @@ namespace Glossa
             {
                 _settings.TargetVoiceGender = radioButton.Content.ToString();
                 _settings.Save();
+                RefreshInfoPanel();
             }
         }
 
@@ -283,6 +305,7 @@ namespace Glossa
 
                 _settings.UserLanguage = code;
                 _settings.Save();
+                RefreshInfoPanel();
 
                 UpdateVoiceGenderAvailability(code, true);
 
@@ -302,6 +325,7 @@ namespace Glossa
 
                 _settings.TargetLanguage = code;
                 _settings.Save();
+                RefreshInfoPanel();
 
                 UpdateVoiceGenderAvailability(code, false);
                 
@@ -377,6 +401,7 @@ namespace Glossa
             {
                 _settings.UserMode = radioButton.Content.ToString();
                 _settings.Save();
+                RefreshInfoPanel();
             }
         }
 
@@ -386,6 +411,7 @@ namespace Glossa
             {
                 _settings.TargetMode = radioButton.Content.ToString();
                 _settings.Save();
+                RefreshInfoPanel();
             }
         }
 
@@ -405,6 +431,7 @@ namespace Glossa
             {
                 _settings.InputTranslateEnabled = radioButton.Content.ToString() == "Enabled";
                 _settings.Save();
+                RefreshInfoPanel();
             }
         }
 
@@ -414,6 +441,7 @@ namespace Glossa
             {
                 _settings.OutputTranslateEnabled = radioButton.Content.ToString() == "Enabled";
                 _settings.Save();
+                RefreshInfoPanel();
             }
         }
         private void InitializeTranslateToggles()
@@ -431,5 +459,167 @@ namespace Glossa
             double availableHeight = e.NewSize.Height - 170 - 10;
             ScrollableContentBorder.Height = availableHeight > 0 ? availableHeight : 0;
         }
+
+
+
+        private void SubtitlesToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (SubtitlesToggle.IsChecked == true)
+            {
+                // Show subtitles window
+                if (subtitlesWindow == null)
+                {
+                    subtitlesWindow = new SubtitlesWindow
+                    {
+                        Owner = this
+                    };
+
+                    // 🔹 Position the window at bottom center
+                    subtitlesWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+
+                    // Wait for window to initialize, then position it
+                    subtitlesWindow.Loaded += (s, args) =>
+                    {
+                        double bottomMargin = 80;
+                        subtitlesWindow.Left = (SystemParameters.WorkArea.Width - subtitlesWindow.ActualWidth) / 2;
+                        subtitlesWindow.Top = SystemParameters.WorkArea.Height - subtitlesWindow.ActualHeight - bottomMargin;
+                    };
+
+                    // 🔹 Register this instance globally so it can be accessed anywhere
+                    SubtitleRenderer.Initialize(subtitlesWindow);
+                }
+
+                subtitlesWindow.Show();
+            }
+            else
+            {
+                // Hide subtitles window
+                subtitlesWindow?.Hide();
+            }
+        }
+
+
+
+        private void SubtitleOpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (subtitlesWindow != null && subtitlesWindow.IsVisible)
+            {
+                subtitlesWindow.SetTransparency(e.NewValue);
+            }
+        }
+
+
+
+        private async void RefreshInfoPanel()
+        {
+            try
+            {
+                // Avatars
+                string userGender = _settings.UserVoiceGender;
+                string targetGender = _settings.TargetVoiceGender;
+
+                UserAvatar.Source = new BitmapImage(new Uri(
+                    $"pack://application:,,,/assets/avatar_{userGender.ToLower()}.png"));
+                TargetAvatar.Source = new BitmapImage(new Uri(
+                    $"pack://application:,,,/assets/avatar_{targetGender.ToLower()}.png"));
+
+                // Flags
+                string jsonPath = Path.Combine(Path.GetTempPath(), "languages.json");
+                if (File.Exists(jsonPath))
+                {
+                    string json = await File.ReadAllTextAsync(jsonPath);
+                    var languages = JsonSerializer.Deserialize<List<LanguageItem>>(json);
+                    if (languages != null)
+                    {
+                        var userLang = languages.FirstOrDefault(l => l.code == _settings.UserLanguage);
+                        var targetLang = languages.FirstOrDefault(l => l.code == _settings.TargetLanguage);
+                        if (userLang != null)
+                            UserFlag.Source = await LoadImageFromUrlAsync(userLang.flag);
+                        if (targetLang != null)
+                            TargetFlag.Source = await LoadImageFromUrlAsync(targetLang.flag);
+                    }
+                }
+
+                // Text labels
+                //UserLang.Text = _settings.UserLanguage;
+                //TargetLang.Text = _settings.TargetLanguage;
+                UserTTS.Text = _settings.InputTTSModel;
+                TargetTTS.Text = _settings.OutputTTSModel;
+
+                // Mode label
+                string combinedMode = $"{_settings.UserMode} / {_settings.TargetMode}";
+                ModeText.Text = combinedMode + " Mode";
+
+                // Color coding
+                if (_settings.UserMode == "Summary" || _settings.TargetMode == "Summary")
+                    ModeLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2E6BCE"));
+                else
+                    ModeLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#444"));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("RefreshInfoPanel error: " + ex.Message);
+            }
+        }
+
+        private void ScrollViewer_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
+        {
+            var scrollViewer = (ScrollViewer)sender;
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.DeltaManipulation.Translation.Y);
+            e.Handled = true;
+        }
+
+        private void AddMessageInternal(string sender, string original, string translated)
+        {
+            // We’re on UI thread now, safe to modify WPF controls
+            var messageStack = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 7)
+            };
+
+            var senderLabel = new TextBlock
+            {
+                Text = sender + ":",
+                FontSize = 12,
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(0, 0, 0, 2),
+                Foreground = (sender == "You")
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#71D5FF"))
+                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE371"))
+            };
+
+            messageStack.Children.Add(senderLabel);
+
+            var contentStack = new StackPanel
+            {
+                Orientation = Orientation.Vertical,
+                Margin = (sender == "You") ? new Thickness(20, 0, 0, 0) : new Thickness(9, 0, 0, 0),
+                MaxWidth = 186
+            };
+
+            contentStack.Children.Add(new TextBlock
+            {
+                Text = original,
+                Foreground = Brushes.White,
+                FontSize = 12,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 0, 0, 2)
+            });
+
+            contentStack.Children.Add(new TextBlock
+            {
+                Text = translated,
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#595959")),
+                FontSize = 11,
+                TextWrapping = TextWrapping.Wrap
+            });
+
+            messageStack.Children.Add(contentStack);
+
+            TranscriptMessages.Children.Add(messageStack);
+            TranscriptScroll.ScrollToEnd();
+        }
     }
+
 }

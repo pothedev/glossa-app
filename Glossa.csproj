@@ -19,13 +19,23 @@
 		<Compile Include="src\**\*.cs" />
 		<Page Include="src\**\*.xaml" Exclude="src\App.xaml" />
 	</ItemGroup>
+	
 
 	<ItemGroup>
+	  <None Remove="assets\avatar_female.png" />
+	  <None Remove="assets\avatar_male.png" />
+	  <None Remove="assets\locked.png" />
+	  <None Remove="assets\locked.svg" />
+	  <None Remove="assets\unlocked.png" />
+	  <None Remove="assets\unlocked.svg" />
+	</ItemGroup>
+	
+
+	<!-- <ItemGroup>
 	  <None Remove="assets\Glossa_logo4.ico" />
-	  <None Remove="data\google_voices.json" />
 	  <None Remove="data\languages.json" />
 	  <None Remove="styles\ScrollbarStyle.xaml" />
-	</ItemGroup>
+	</ItemGroup> -->
 
 	<ItemGroup>
 	  <Page Include="styles\ScrollbarStyle.xaml" />
@@ -33,6 +43,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Betalgo.OpenAI" Version="8.7.2" />
+		<PackageReference Include="ModernWPF" Version="1.4.6" />
 		<PackageReference Include="OpenAI" Version="2.5.0" />
 		<PackageReference Include="System.Speech" Version="8.0.0" />
 	</ItemGroup>
@@ -45,7 +56,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Resource Include="assets\avatar_female.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="assets\avatar_male.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="assets\Glossa_logo4.ico">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="assets\locked.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="assets\locked.svg">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="assets\unlocked.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="assets\unlocked.svg">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
 		

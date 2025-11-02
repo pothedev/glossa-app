@@ -5,7 +5,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:local="clr-namespace:Glossa"
             mc:Ignorable="d"
-            Title="Glossa" Height="600" Width="1000"
+            Title="Glossa" Height="720" Width="1100"
             Background="#121212"
             Icon="pack://application:,,,/assets/Glossa_logo4.ico"
             SizeChanged="Window_SizeChanged">
@@ -128,7 +128,11 @@
                         Grid.Column="0"
                         BorderThickness="0 1 0 0"
                         BorderBrush="#535353" Padding="0 20 0 0">
-                    <ScrollViewer>
+                    <ScrollViewer 
+    VerticalScrollBarVisibility="Auto"
+    PanningMode="VerticalOnly"
+    PanningDeceleration="0.001"
+    IsDeferredScrollingEnabled="False">
                         <StackPanel Orientation="Vertical">
 
                             <!-- Language -->
@@ -534,19 +538,334 @@
                                 </Grid>
                             </Border>
 
+
+
+                            <!-- Subtitles Window Toggle -->
+                            <Border BorderThickness="0 0 0 0.3" BorderBrush="#535353" Padding="0 0 0 30">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Subtitles Window Control -->
+                                    <StackPanel Grid.Column="0" Margin="0 20 0 0">
+                                        <TextBlock Text="Subtitles Window" 
+                       Foreground="White" 
+                       FontSize="14" 
+                       Margin="0 0 0 10"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="Show" 
+                           Foreground="White" 
+                           FontSize="14" 
+                           VerticalAlignment="Center" 
+                           Margin="0 0 10 0"/>
+                                            <ToggleButton x:Name="SubtitlesToggle"
+                              Width="40"
+                              Height="20"
+                              Background="#2E2E2E"
+                              BorderBrush="#3E3E3E"
+                              BorderThickness="1"
+                              
+                              Click="SubtitlesToggle_Click">
+                                                <Grid>
+                                                    <Ellipse x:Name="Knob"
+                                 Width="16"
+                                 Height="16"
+                                 Fill="White"
+                                 HorizontalAlignment="Left"
+                                 Margin="2,0,0,0"/>
+                                                </Grid>
+                                                <ToggleButton.Style>
+                                                    <Style TargetType="ToggleButton">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Border x:Name="SwitchBorder"
+                                                Background="#2E2E2E"
+                                                CornerRadius="10"
+                                                BorderBrush="#3E3E3E"
+                                                BorderThickness="1"
+                                                Width="40"
+                                                Height="20">
+                                                                        <Grid>
+                                                                            <Ellipse x:Name="SwitchKnob"
+                                                         Width="16"
+                                                         Height="16"
+                                                         Fill="White"
+                                                         Margin="2,0,0,0"
+                                                         HorizontalAlignment="Left"/>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                            <Setter TargetName="SwitchBorder" Property="Background" Value="#2E6BCE"/>
+                                                                            <Setter TargetName="SwitchKnob" Property="HorizontalAlignment" Value="Right"/>
+                                                                            <Setter TargetName="SwitchKnob" Property="Margin" Value="0,0,2,0"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ToggleButton.Style>
+                                            </ToggleButton>
+                                        </StackPanel>
+                                        
+                                        
+                                        <!-- Subtitle Transparency Slider -->
+                                        <StackPanel Margin="0 15 0 0" HorizontalAlignment="Left">
+                                            <TextBlock Text="Transparency"
+               Foreground="#FFFFFF"
+               FontSize="13"
+               Margin="0 0 0 6"/>
+
+                                            <Slider x:Name="SubtitleOpacitySlider"
+        Minimum="0.2"
+        Maximum="1.0"
+        Value="0.66"
+        TickFrequency="0.1"
+        IsSnapToTickEnabled="False"
+        Width="180"
+        Height="22"
+        ValueChanged="SubtitleOpacitySlider_ValueChanged">
+                                                <Slider.Resources>
+                                                    <Style TargetType="Slider">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Slider">
+                                                                    <Grid>
+                                                                        <!-- Track -->
+                                                                        <Track x:Name="PART_Track"
+                                   Height="10"
+                                   VerticalAlignment="Center"
+                                   Maximum="{TemplateBinding Maximum}"
+                                   Minimum="{TemplateBinding Minimum}"
+                                   Value="{TemplateBinding Value}">
+                                                                            <Track.DecreaseRepeatButton>
+                                                                                <RepeatButton Command="Slider.DecreaseLarge"
+                                                                                              Background="#2E6BCE"
+                                                                                              Height="4"
+                                                                                              BorderThickness="0">                                         
+                                                                                    <RepeatButton.Style>
+                                                                                        <Style TargetType="RepeatButton">
+                                                                                            <Setter Property="Template">
+                                                                                                <Setter.Value>
+                                                                                                    <ControlTemplate TargetType="RepeatButton">
+                                                                                                        <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="4"/>
+                                                                                                    </ControlTemplate>
+                                                                                                </Setter.Value>
+                                                                                            </Setter>
+                                                                                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                                                                            <Setter Property="Focusable" Value="False"/>
+                                                                                            <Setter Property="Background" Value="#2E6BCE"/>
+                                                                                        </Style>
+                                                                                    </RepeatButton.Style>
+                                                                                </RepeatButton>
+                                                                            </Track.DecreaseRepeatButton>
+
+                                                                            <Track.IncreaseRepeatButton>
+                                                                                <RepeatButton Command="Slider.IncreaseLarge"
+                  Background="#1D1D21"
+                  Height="4"
+                  BorderThickness="0"
+                  >
+                                                                                    <RepeatButton.Style>
+                                                                                        <Style TargetType="RepeatButton">
+                                                                                            <Setter Property="Template">
+                                                                                                <Setter.Value>
+                                                                                                    <ControlTemplate TargetType="RepeatButton">
+                                                                                                        <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="4"/>
+                                                                                                    </ControlTemplate>
+                                                                                                </Setter.Value>
+                                                                                            </Setter>
+                                                                                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                                                                            <Setter Property="Focusable" Value="False"/>
+                                                                                            <Setter Property="Background" Value="#1D1D21"/>
+                                                                                        </Style>
+                                                                                    </RepeatButton.Style>
+                                                                                </RepeatButton>
+                                                                            </Track.IncreaseRepeatButton>
+
+
+                                                                            <Track.Thumb>
+                                                                                <Thumb Width="10"
+                                                                                       Height="10"
+                                                                                       Background="White"
+                                                                                       BorderThickness="0">
+                                                                                    <Thumb.Template>
+                                                                                        <ControlTemplate TargetType="Thumb">
+                                                                                            <Ellipse Fill="{TemplateBinding Background}"/>
+                                                                                        </ControlTemplate>
+                                                                                    </Thumb.Template>
+                                                                                
+                                                                                <Thumb.Style>
+                                                                                        <Style TargetType="Thumb">
+                                                                                            <Setter Property="Effect">
+                                                                                                <Setter.Value>
+                                                                                                    <DropShadowEffect BlurRadius="5"
+                                                                          Color="#2E6BCE"
+                                                                          ShadowDepth="0"
+                                                                          Opacity="0"/>
+                                                                                                </Setter.Value>
+                                                                                            </Setter>
+                                                                                            <Style.Triggers>
+                                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                                    <Setter Property="Effect">
+                                                                                                        <Setter.Value>
+                                                                                                            <DropShadowEffect BlurRadius="7"
+                                                                                  Color="#2E6BCE"
+                                                                                  ShadowDepth="0"
+                                                                                  Opacity="0.6"/>
+                                                                                                        </Setter.Value>
+                                                                                                    </Setter>
+                                                                                                </Trigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </Thumb.Style>
+                                                                                </Thumb>
+                                                                            </Track.Thumb>
+                                                                        </Track>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Slider.Resources>
+                                            </Slider>
+
+                                        </StackPanel>
+
+                                    </StackPanel>
+
+                                    <!-- Subtitle Preview Text or Info -->
+                                    <!--<StackPanel Grid.Column="1" Margin="15 20 0 0">
+                                        <TextBlock Text="Displays live translated text in a floating window."
+                                                   Foreground="#999"
+                                                   FontSize="13"
+                                                   TextWrapping="Wrap"/>
+                                    </StackPanel>-->
+                                </Grid>
+                            </Border>
+
+
                         </StackPanel>
                     </ScrollViewer>
                 </Border>
+                
 
                 <!-- Middle Column (Spacer) -->
                 <Border Grid.Column="1"/>
 
-                <!-- Right Column (Yellow placeholder) -->
+                <!-- Right Column (info panel) -->
                 <StackPanel Grid.Column="2"
                             Orientation="Vertical"
                             HorizontalAlignment="Left"
                             Background="Transparent">
-                    <!--<TextBlock Text="yooooooo"/>-->
+                    <Border x:Name="InfoPanel"
+        Background="#1D1D21"
+        CornerRadius="12"
+        Padding="12"
+        Width="280"
+        MaxHeight="485"
+        Margin="20,0,0,0"
+        BorderBrush="#2E2E2E"
+        BorderThickness="1">
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+
+                            <!-- Mode label -->
+                            <Border x:Name="ModeLabel"
+                Background="#3F6AC1"
+                CornerRadius="10"
+                Padding="12 4"
+                HorizontalAlignment="Center"
+                Margin="0 0 0 20">
+                                <TextBlock x:Name="ModeText"
+                       Text="Summary Mode"
+                       Foreground="White"
+                       FontSize="13"
+                       HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Two avatars -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- You -->
+                                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                    <Image x:Name="UserAvatar"
+                       Source="pack://application:,,,/assets/avatar_male.png"
+                       Width="80" Height="80"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,2">
+                                        <TextBlock Text="You"
+                               Foreground="White"
+                               FontSize="15"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,0"/>
+                                        <Image x:Name="UserFlag" Width="18" Height="12"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="UserTTS" Text="Google Cloud"
+                           Foreground="#9BA0A6" FontSize="13" TextAlignment="Center"/>
+                                    <!--<TextBlock x:Name="UserLang" Text="uk-UA"
+                           Foreground="#2E6BCE" FontSize="13" TextAlignment="Center"/>-->
+                                </StackPanel>
+
+                                <!-- ↔ -->
+                                <TextBlock Grid.Column="1"
+                       Text="⇄"
+                       Foreground="#CCCCCC"
+                       FontSize="18"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="0 -56 0 0"/>
+
+                                <!-- Other -->
+                                <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                                    <Image x:Name="TargetAvatar"
+                       Source="pack://application:,,,/assets/avatar_female.png"
+                       Width="80" Height="80"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,2">
+                                        <TextBlock Text="Other"
+                               Foreground="White"
+                               FontSize="15"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,0"/>
+                                        <Image x:Name="TargetFlag" Width="18" Height="12"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="TargetTTS" Text="Google Cloud"
+                           Foreground="#9BA0A6" FontSize="13" TextAlignment="Center"/>
+                                    <!--<TextBlock x:Name="TargetLang" Text="pl-PL"
+                           Foreground="#2E6BCE" FontSize="13" TextAlignment="Center"/>-->
+                                </StackPanel>
+                            </Grid>
+
+                            
+                            <Border Background="#181818"
+        CornerRadius="8"
+        Padding="10"
+        BorderThickness="1"
+        BorderBrush="#2E2E2E"
+        Margin="0,14,0,0"
+        x:Name="TranscriptPanel">
+
+                                <ScrollViewer x:Name="TranscriptScroll"
+                  VerticalScrollBarVisibility="Auto"
+                  MaxHeight="250">
+                                    <StackPanel x:Name="TranscriptMessages"
+                    Orientation="Vertical"
+                    VerticalAlignment="Bottom"/>
+                                </ScrollViewer>
+                            </Border>
+
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </Grid>
         </StackPanel>
